@@ -4,5 +4,4 @@
 .Ruserdata
 packrat/lib*/
 inst/doc
-packrat/src/
 /revdep/.cache.rds

@@ -37,7 +37,7 @@ prepare_factors <- function(train, test = NULL,
                             output_type = c("character", "factor", "integer"),
                             encoding = NULL, return_mapping = FALSE) {
   # Check arguments
-  if (!is.character(train)) stop("`training` must be a character.")
+  if (!is.character(train)) stop("`train` must be a character.")
   if (!is.character(test) | is.null(test)) stop("`test` must be a character when it is provided.")
   if (!is.integer(rare_count)) stop("`rare_count` must be an integer.")
   if (!is.character(rare_level)) stop("`rare_level` must be a character.")

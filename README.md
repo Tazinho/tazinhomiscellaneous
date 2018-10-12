@@ -1,2 +1,13 @@
+
 # tazinhomiscellaneous
-miscellaneous helper functions
+
+[![AppVeyor Build
+Status](https://ci.appveyor.com/api/projects/status/github/Tazinho/snakecase?branch=master&svg=true)](https://ci.appveyor.com/project/Tazinho/snakecase)
+[![Travis-CI Build
+Status](https://travis-ci.org/Tazinho/snakecase.svg?branch=master)](https://travis-ci.org/Tazinho/snakecase)
+[![Coverage
+status](https://codecov.io/gh/Tazinho/tazinhomiscellaneous/branch/master/graph/badge.svg)](https://codecov.io/github/Tazinho/tazinhomiscellaneous?branch=master)
+
+## Overview
+
+Miscellaneous helper functions.
