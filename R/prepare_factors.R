@@ -52,10 +52,10 @@ prepare_factors <- function(train, test = NULL,
   train_u <- unique(train)
   test_u  <- unique(test)
   train_test_u <- unique(train, test)
-  if(new_level %in% train_u)  warning("`new_level` is already a level in `train`")
-  if(new_level %in% test_u)  warning("`new_level` is already a level in `test`")
-  if(rare_level %in% train_u)  warning("`rare_level` is already a level in `train`")
-  if(rare_level %in% test_u)  warning("`rare_level` is already a level in `test`")
+  if (new_level %in% train_u)  warning("`new_level` is already a level in `train`")
+  if (new_level %in% test_u)  warning("`new_level` is already a level in `test`")
+  if (rare_level %in% train_u)  warning("`rare_level` is already a level in `train`")
+  if (rare_level %in% test_u)  warning("`rare_level` is already a level in `test`")
   # Count levels in the training data and change levels accordingly (while keeping NAs)
   df_train <- dplyr::tibble(train = train) %>% 
     dplyr::count(train) %>%
@@ -73,11 +73,11 @@ prepare_factors <- function(train, test = NULL,
   output <- df_train_test[["output"]]
   if (output_type != "character") {
     output_level <- df_train %>% dplyr::filter(count_train >= rare_count) %>%
-      dplyr::pull(train) %>% c(., rare_level, new_level)
+      dplyr::pull(train) %>% c(rare_level, new_level)
     output <- factor(output, ordered = TRUE, levels = output_level)
   }
   
-  if(output_type == "integer") {
+  if (output_type == "integer") {
     output <- as.integer(output) 
   }
   # - possibly add `mapping` attribute
