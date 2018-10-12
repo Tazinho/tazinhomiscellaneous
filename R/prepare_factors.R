@@ -41,8 +41,6 @@ prepare_factors <- function(train, test = NULL,
   if (rare_level %in% train_u)  warning("`rare_level` is already a level in `train`")
   if (rare_level %in% test_u)  warning("`rare_level` is already a level in `test`")
   # Count levels in the training data and change levels accordingly (while keeping NAs)
-  
-  
   df_train <- dplyr::tibble(train = train) %>% 
     dplyr::count(train) %>%
     dplyr::rename(count_train = n)
