@@ -1,0 +1,6 @@
+^codecov\.yml$
+^\.travis\.yml$
+^packrat/
+^\.Rprofile$
+^.*\.Rproj$
+^\.Rproj\.user$

@@ -1,0 +1,23 @@
+Package: tazinhomiscellaneous
+Version: 0.1
+Date: 2018-10-12
+Title: Little helpers
+Description: Helpers, ideas and other stuff which will probably change a lot and refactored elsewhere.
+Authors@R: c(
+    person("Malte", "Grosser", , "malte.grosser@gmail.com", role = c("aut", "cre")))
+Maintainer: Malte Grosser <malte.grosser@gmail.com>
+Depends:
+    R (>= 3.1)
+Imports:
+    dplyr
+Suggests:
+    testthat,
+    covr,
+    knitr,
+    rmarkdown
+URL: https://github.com/Tazinho/tazinhomiscellaneous
+BugReports: https://github.com/Tazinho/tazinhomiscellaneous/issues
+Encoding: UTF-8
+License: GPL-3
+RoxygenNote: 6.1.0
+VignetteBuilder: knitr
