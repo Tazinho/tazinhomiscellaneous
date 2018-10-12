@@ -10,6 +10,7 @@
 #' @param ignore_na Logical. Should \code{NA}s \code{NA}?
 #' @param output_type Character ("character", "factor" or "integer"). If \code{"factor"} the output always gets the levels \code{rare_level} and \code{other_level}.
 #' @param encoding Character. Specifies the sorting of the levels / integers (when the \code{output_type} is not \code{"character"}.
+#' @param return_mapping Logical. Should a mapping between integers and original characters be returned.
 #' 
 #' @return A contatenated vector of `train` and `test` transformed and converted regarding the \code{output_type}.
 #' 
