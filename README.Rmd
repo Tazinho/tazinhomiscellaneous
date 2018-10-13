@@ -13,7 +13,7 @@ Miscellaneous helper functions.
 ### Installation
 
 ```{r}
-devtools::install_github("Tazinho/tazinhomiscellaneous")
+devtools::install_github("Tazinho/tazinhomiscellaneous", force = TRUE)
 ```
 
 ## `prepare_factors`
