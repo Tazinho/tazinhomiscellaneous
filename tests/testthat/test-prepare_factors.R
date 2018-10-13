@@ -53,4 +53,60 @@ test_that("check that order of integers doesn't change",{
                c(1L, 1L, 1L, 1L, 1L, 2L, 2L, 3L, 3L, 3L, 1L, 1L, 1L, 1L, 1L, 
                  2L, 2L, 2L, 2L, 2L)
                )
+  
+  
+  expect_equal(prepare_factors(c("a", "a", "a")),
+               c("rare", "rare", "rare")
+               )
+  expect_equal(prepare_factors(c("a", "a", "a", "a", "a")),
+               c("a", "a", "a", "a", "a")
+               )
+  expect_equal(prepare_factors("a", NA_character_),
+               c("rare", NA)
+               )
+  expect_equal(prepare_factors(character(0), NA_character_),
+               NA_character_
+               )
 })
+
+test_that("Input checks",{
+
+  expect_error(prepare_factors(TRUE),
+               "`train` must be a character.",
+               fixed = TRUE)
+  expect_error(prepare_factors("a", TRUE),
+               '`test` must be a character when it is provided.',
+               fixed = TRUE)
+  expect_error(prepare_factors("a", rare_count = TRUE),
+               '`rare_count` must be an integer.',
+               fixed = TRUE)
+  expect_error(prepare_factors("a", rare_level = TRUE),
+               '`rare_level` must be a character.',
+               fixed = TRUE)
+  expect_error(prepare_factors("a", new_level = TRUE),
+               '`new_level` must be a character.',
+               fixed = TRUE)
+  expect_error(prepare_factors("a", ignore_na = "hat"),
+               '`ignore_na` must be a logical.',
+               fixed = TRUE)
+  expect_error(prepare_factors("a", encoding = "hat"),
+               '`encoding` is not implemented at the moment.',
+               fixed = TRUE)
+  expect_error(prepare_factors("a", return_mapping = "bla"),
+               '`return_mapping` must be a logical.',
+               fixed = TRUE)
+  expect_warning(prepare_factors("other"),
+                 '`new_level` is already a level in `train`.',
+               fixed = TRUE)
+  expect_warning(prepare_factors("a", "other"),
+                 '`new_level` is already a level in `test`.',
+               fixed = TRUE)
+  expect_warning(prepare_factors("rare", "a"),
+                 '`rare_level` is already a level in `train`.',
+                 fixed = TRUE)
+  expect_warning(prepare_factors("a", "rare"),
+                 '`rare_level` is already a level in `test`.',    
+                 fixed = TRUE)
+  }
+)
+

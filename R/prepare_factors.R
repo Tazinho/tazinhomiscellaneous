@@ -23,23 +23,23 @@ prepare_factors <- function(train, test = NULL,
                             encoding = NULL, return_mapping = FALSE) {
   # Check arguments
   if (!is.character(train)) stop("`train` must be a character.")
-  if (!(is.character(test)|is.null(test))) stop("`test` must be a character when it is provided.")
+  if (!(is.character(test) | is.null(test))) stop("`test` must be a character when it is provided.")
   if (!is.integer(rare_count)) stop("`rare_count` must be an integer.")
   if (!is.character(rare_level)) stop("`rare_level` must be a character.")
   if (!is.character(new_level)) stop("`new_level` must be a character.")
   if (!is.logical(ignore_na)) stop("`ignore_na` must be a logical.")
   output_type <- match.arg(output_type)
-  if (!is.null(encoding)) stop("`encoding` is not implemented at the moment-")
+  if (!is.null(encoding)) stop("`encoding` is not implemented at the moment.")
   if (!is.logical(return_mapping)) stop("`return_mapping` must be a logical.")
   # Here should be a warning when `new_level` or `rare_level` already occur in the data
   train_test <- c(train, test)
   train_u <- unique(train)
   test_u  <- unique(test)
   train_test_u <- unique(train, test)
-  if (new_level %in% train_u)  warning("`new_level` is already a level in `train`")
-  if (new_level %in% test_u)  warning("`new_level` is already a level in `test`")
-  if (rare_level %in% train_u)  warning("`rare_level` is already a level in `train`")
-  if (rare_level %in% test_u)  warning("`rare_level` is already a level in `test`")
+  if (new_level %in% train_u)  warning("`new_level` is already a level in `train`.")
+  if (new_level %in% test_u)  warning("`new_level` is already a level in `test`.")
+  if (rare_level %in% train_u)  warning("`rare_level` is already a level in `train`.")
+  if (rare_level %in% test_u)  warning("`rare_level` is already a level in `test`.")
   # Count levels in the training data and change levels accordingly (while keeping NAs)
   df_train <- dplyr::tibble(train = train) %>% 
     dplyr::count(train) %>%
