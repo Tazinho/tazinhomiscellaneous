@@ -22,7 +22,7 @@ prepare_factors(train, test = NULL, rare_count = 5L,
 
 \item{ignore_na}{Logical. Should \code{NA}s \code{NA}?}
 
-\item{output_type}{Character ("character", "factor" or "integer"). If \code{"factor"} the output always gets the levels \code{rare_level} and \code{other_level}.}
+\item{output_type}{Character ("character", "factor" or "integer"). If \code{"factor"} the train_test always gets the levels \code{rare_level} and \code{other_level}.}
 
 \item{encoding}{Character. Specifies the sorting of the levels / integers (when the \code{output_type} is not \code{"character"}.}
 

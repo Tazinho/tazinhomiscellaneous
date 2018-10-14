@@ -8,7 +8,7 @@
 #' @param rare_level Character. Specification of the new name for rare levels.
 #' @param new_level Character. The level for manifestations that didn't show up in the training data.
 #' @param ignore_na Logical. Should \code{NA}s \code{NA}?
-#' @param output_type Character ("character", "factor" or "integer"). If \code{"factor"} the output always gets the levels \code{rare_level} and \code{other_level}.
+#' @param output_type Character ("character", "factor" or "integer"). If \code{"factor"} the train_test always gets the levels \code{rare_level} and \code{other_level}.
 #' @param encoding Character. Specifies the sorting of the levels / integers (when the \code{output_type} is not \code{"character"}.
 #' @param return_mapping Logical. Should a mapping between integers and original characters be returned.
 #' 
@@ -39,34 +39,35 @@ prepare_factors <- function(train, test = NULL,
   if (rare_level %in% train_u)  warning("`rare_level` is already a level in `train`.")
   if (rare_level %in% test_u)  warning("`rare_level` is already a level in `test`.")
   
-  # Count levels regarding their appearance in the training data accordingly (and keep NAs)
-  train_test_n <- table(train, useNA = "ifany")
+  # Count levels regarding their appearance in the training data (and keep NAs)
+  train_test_map <- table(train, useNA = "ifany")
   
-  train_test_n <- c(setNames(as.integer(train_test_n),
-                             names(train_test_n)),
-                    setNames(rep(0L, length(setdiff(test_u, train_u))),
-                             setdiff(test_u, train_u)))
-  # Map the level count to train test and keep levels as names
-  train_test <- train_test_n[c(train, test)]
-  # Separate the mapping into a count (n)
-  n <- as.integer(train_test)
-  n[is.na(n)] <- 0L
-  # And the later output
-  output <- names(train_test)
-  output[!is.na(output) & n < rare_count] <- rare_level
-  output[!is.na(output) & n == 0L] <- new_level
+  train_test_map <- c(setNames(as.integer(train_test_map),
+                               names(train_test_map)),
+                      setNames(rep(0L, length(setdiff(test_u, train_u))),
+                               setdiff(test_u, train_u)))
   
-  # Convert output
+  # Map n to train_test
+  train_test_n <- train_test_map[c(train, test)]
+  train_test_n[is.na(train_test_n)] <- 0L
+  # Map levels to train_test
+  train_test <- names(train_test_n)
+  train_test[!is.na(train_test) & train_test_n < rare_count] <- rare_level
+  train_test[!is.na(train_test) & train_test_n == 0L] <- new_level
+  
+  # Convert train_test
   if (output_type != "character") {
-    output_level <- c(names(train_test_n)[train_test_n >= rare_count], rare_level, new_level)
-    output <- factor(output, ordered = TRUE, levels = output_level)
+    train_test_level <- c(names(train_test_map)[train_test_map >= rare_count], 
+                          rare_level,
+                          new_level)
+    train_test <- factor(train_test, ordered = TRUE, levels = train_test_level)
   }
   
   if (output_type == "integer") {
-    output <- as.integer(output) 
+    train_test <- as.integer(train_test) 
   }
   
   # - Possibly add `mapping` attribute
   # Return
-  output
+  train_test
 }
