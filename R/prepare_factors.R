@@ -42,10 +42,10 @@ prepare_factors <- function(train, test = NULL,
   # Count levels regarding their appearance in the training data (and keep NAs)
   train_test_map <- table(train, useNA = "ifany")
   
-  train_test_map <- c(setNames(as.integer(train_test_map),
-                               names(train_test_map)),
-                      setNames(rep(0L, length(setdiff(test_u, train_u))),
-                               setdiff(test_u, train_u)))
+  train_test_map <- c(stats::setNames(as.integer(train_test_map),
+                                      names(train_test_map)),
+                      stats::setNames(rep(0L, length(setdiff(test_u, train_u))),
+                                      setdiff(test_u, train_u)))
   
   # Map n to train_test
   train_test_n <- train_test_map[c(train, test)]

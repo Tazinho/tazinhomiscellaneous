@@ -2,22 +2,28 @@ context("prepare_factors")
 
 test_that("initial poc",{
   
-  train <- tibble::tibble(stay_same  = c('a','a','a','a','a','b','b','a','b','b','b', NA, NA),
+  train <- data.frame(stay_same  = c('a','a','a','a','a','b','b','a','b','b','b', NA, NA),
                          some_rare  = c('c','d','e','e','a','b','b','a','b','b','b', NA, NA),
                          some_new   = c('c','d','e','e','a','b','b','a','b','b','b', NA, NA),
                          integer    = c( 1L, 2L, 3L, 4L, 6L, 7L, 8L, 9L,10L,11L,12L,13L,14L),
-                         logical    = c(  TRUE,  FALSE,  TRUE,  FALSE,  TRUE,  FALSE,  TRUE,  FALSE,  TRUE,  FALSE,  TRUE,  FALSE,  TRUE))
-  test  <- tibble::tibble(stay_same  = c('a','a','a','a','a','b','b','a','b','b','b', NA, NA),
+                         logical    = c(  TRUE,  FALSE,  TRUE,  FALSE,  TRUE,  FALSE,  TRUE,  FALSE,  TRUE,  FALSE,  TRUE,  FALSE,  TRUE), 
+                      stringsAsFactors = FALSE)
+  test  <- data.frame(stay_same  = c('a','a','a','a','a','b','b','a','b','b','b', NA, NA),
                          some_rare  = c('c','c','c','c','c','d','b','a','b','b','b', NA, NA),
                          some_new   = c('f','a','a','g','a','b','b','a','b','b','b', NA, NA),
                          integer    = c( 1L, 2L, 3L, 4L, 6L, 7L, 8L, 9L,10L,11L,12L,13L,14L),
-                         logical    = c(  TRUE,  FALSE,  TRUE,  FALSE,  TRUE,  FALSE,  TRUE,  FALSE,  TRUE,  FALSE,  TRUE,  FALSE,  TRUE))
+                         logical    = c(  TRUE,  FALSE,  TRUE,  FALSE,  TRUE,  FALSE,  TRUE,  FALSE,  TRUE,  FALSE,  TRUE,  FALSE,  TRUE),
+                      stringsAsFactors = FALSE)
   
   expect_equal(prepare_factors(train$some_new, test$some_new, rare_count = 5L),
                c("rare", "rare", "rare", "rare", "rare", "b", "b", "rare", "b", 
                  "b", "b", NA, NA, "other", "rare", "rare", "other", "rare", "b", 
                  "b", "rare", "b", "b", "b", NA, NA)
   ) 
+  
+  expect_equal(prepare_factors(c(NA, NA, NA, NA, NA, "a"), 
+                               c("b",NA, "a")),
+               c(NA, NA, NA, NA, NA, "rare", "other", NA, "rare"))
 })
 
 test_that("check that order of integers doesn't change",{
