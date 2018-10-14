@@ -31,36 +31,42 @@ prepare_factors <- function(train, test = NULL,
   output_type <- match.arg(output_type)
   if (!is.null(encoding)) stop("`encoding` is not implemented at the moment.")
   if (!is.logical(return_mapping)) stop("`return_mapping` must be a logical.")
-  # Here should be a warning when `new_level` or `rare_level` already occur in the data
-  train_test <- c(train, test)
+  # Warning when `new_level` or `rare_level` already occur in the data
   train_u <- unique(train)
   test_u  <- unique(test)
   if (new_level %in% train_u)  warning("`new_level` is already a level in `train`.")
   if (new_level %in% test_u)  warning("`new_level` is already a level in `test`.")
   if (rare_level %in% train_u)  warning("`rare_level` is already a level in `train`.")
   if (rare_level %in% test_u)  warning("`rare_level` is already a level in `test`.")
-  # Count levels in the training data and change levels accordingly (while keeping NAs)
-  df_train <- dplyr::tibble(train = train) %>% 
-    dplyr::count(train) 
   
-  n <- dplyr::tibble(train_test = train_test) %>% 
-    dplyr::left_join(df_train, by = c("train_test" = "train")) %>% dplyr::pull(n)
+  # Count levels regarding their appearance in the training data accordingly (and keep NAs)
+  train_test_n <- table(train, useNA = "ifany")
+  
+  train_test_n <- c(setNames(as.integer(train_test_n),
+                             names(train_test_n)),
+                    setNames(rep(0L, length(setdiff(test_u, train_u))),
+                             setdiff(test_u, train_u)))
+  # Map the level count to train test and keep levels as names
+  train_test <- train_test_n[c(train, test)]
+  # Separate the mapping into a count (n)
+  n <- as.integer(train_test)
   n[is.na(n)] <- 0L
-  
-  output <- train_test
+  # And the later output
+  output <- names(train_test)
   output[!is.na(output) & n < rare_count] <- rare_level
   output[!is.na(output) & n == 0L] <- new_level
   
-  # convert output
+  # Convert output
   if (output_type != "character") {
-    output_level <- c(df_train[df_train[["n"]] >= rare_count, ][["train"]], rare_level, new_level)
+    output_level <- c(names(train_test_n)[train_test_n >= rare_count], rare_level, new_level)
     output <- factor(output, ordered = TRUE, levels = output_level)
   }
   
   if (output_type == "integer") {
     output <- as.integer(output) 
   }
-  # - possibly add `mapping` attribute
-  # return
+  
+  # - Possibly add `mapping` attribute
+  # Return
   output
 }

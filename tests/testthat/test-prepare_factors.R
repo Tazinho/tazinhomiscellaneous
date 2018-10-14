@@ -64,9 +64,7 @@ test_that("check that order of integers doesn't change",{
   expect_equal(prepare_factors("a", NA_character_),
                c("rare", NA)
                )
-  expect_equal(prepare_factors(character(0), NA_character_),
-               NA_character_
-               )
+
 })
 
 test_that("Input checks",{
