@@ -35,29 +35,25 @@ prepare_factors <- function(train, test = NULL,
   train_test <- c(train, test)
   train_u <- unique(train)
   test_u  <- unique(test)
-  train_test_u <- unique(train, test)
   if (new_level %in% train_u)  warning("`new_level` is already a level in `train`.")
   if (new_level %in% test_u)  warning("`new_level` is already a level in `test`.")
   if (rare_level %in% train_u)  warning("`rare_level` is already a level in `train`.")
   if (rare_level %in% test_u)  warning("`rare_level` is already a level in `test`.")
   # Count levels in the training data and change levels accordingly (while keeping NAs)
   df_train <- dplyr::tibble(train = train) %>% 
-    dplyr::count(train) %>%
-    dplyr::rename(count_train = n)
-  df_train_test <- dplyr::tibble(train_test = train_test) %>% 
-    dplyr::left_join(df_train, by = c("train_test" = "train")) %>% 
-    dplyr::mutate(count_train = dplyr::if_else(is.na(count_train), 0L, count_train)) %>% 
-    dplyr::mutate(output = dplyr::case_when(
-      is.na(train_test)         ~ train_test,
-      count_train == 0L         ~ new_level,
-      count_train  < rare_count ~ rare_level,
-      TRUE                      ~ train_test
-    ))
+    dplyr::count(train) 
+  
+  n <- dplyr::tibble(train_test = train_test) %>% 
+    dplyr::left_join(df_train, by = c("train_test" = "train")) %>% dplyr::pull(n)
+  n[is.na(n)] <- 0L
+  
+  output <- train_test
+  output[!is.na(output) & n < rare_count] <- rare_level
+  output[!is.na(output) & n == 0L] <- new_level
+  
   # convert output
-  output <- df_train_test[["output"]]
   if (output_type != "character") {
-    output_level <- df_train %>% dplyr::filter(count_train >= rare_count) %>%
-      dplyr::pull(train) %>% c(rare_level, new_level)
+    output_level <- c(df_train[df_train[["n"]] >= rare_count, ][["train"]], rare_level, new_level)
     output <- factor(output, ordered = TRUE, levels = output_level)
   }
   
@@ -68,5 +64,3 @@ prepare_factors <- function(train, test = NULL,
   # return
   output
 }
-
-utils::globalVariables(c("n", "count_train"))

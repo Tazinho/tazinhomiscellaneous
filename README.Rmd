@@ -22,7 +22,6 @@ devtools::install_github("Tazinho/tazinhomiscellaneous")
 
 ```{r, warning=FALSE, message=FALSE, collapse=TRUE}
 library(tazinhomiscellaneous)
-library(purrr)
 library(dplyr)
 
 train <- tibble(stay_same  = c('a','a','a','a','a','b','b','b','b','b'),
@@ -43,10 +42,12 @@ train_test <- bind_rows(train, test)
 i_train <- 1:nrow(train)
 
 train_test %>% 
-  map_if(is.character, ~ prepare_factors(.x[i_train], .x[-i_train], output_type = "character")) %>% 
-  as_tibble() %>% print(n = nrow(.))
+  mutate_if(is.character,
+            ~ prepare_factors(.x[i_train], .x[-i_train], output_type = "character")) %>% 
+  print(n = nrow(.))
 
 train_test %>% 
-  map_if(is.character, ~ prepare_factors(.x[i_train], .x[-i_train], output_type = "integer")) %>% 
-  as_tibble() %>% print(n = nrow(.))
+  mutate_if(is.character,
+            ~ prepare_factors(.x[i_train], .x[-i_train], output_type = "integer")) %>% 
+  print(n = nrow(.))
 ```

@@ -27,7 +27,6 @@ factor encoding, this might already suffice.
 
 ``` r
 library(tazinhomiscellaneous)
-library(purrr)
 library(dplyr)
 
 train <- tibble(stay_same  = c('a','a','a','a','a','b','b','b','b','b'),
@@ -48,8 +47,9 @@ train_test <- bind_rows(train, test)
 i_train <- 1:nrow(train)
 
 train_test %>% 
-  map_if(is.character, ~ prepare_factors(.x[i_train], .x[-i_train], output_type = "character")) %>% 
-  as_tibble() %>% print(n = nrow(.))
+  mutate_if(is.character,
+            ~ prepare_factors(.x[i_train], .x[-i_train], output_type = "character")) %>% 
+  print(n = nrow(.))
 ## # A tibble: 15 x 6
 ##    stay_same some_rare some_new only_new integer logical
 ##    <chr>     <chr>     <chr>    <chr>      <int> <lgl>  
@@ -70,8 +70,9 @@ train_test %>%
 ## 15 <NA>      rare      f        other          5 TRUE
 
 train_test %>% 
-  map_if(is.character, ~ prepare_factors(.x[i_train], .x[-i_train], output_type = "integer")) %>% 
-  as_tibble() %>% print(n = nrow(.))
+  mutate_if(is.character,
+            ~ prepare_factors(.x[i_train], .x[-i_train], output_type = "integer")) %>% 
+  print(n = nrow(.))
 ## # A tibble: 15 x 6
 ##    stay_same some_rare some_new only_new integer logical
 ##        <int>     <int>    <int>    <int>   <int> <lgl>  
