@@ -1,4 +1,3 @@
-
 #' Preparing data for machine learning
 #' 
 #' Function to convert rare and new levels in test data
@@ -16,7 +15,7 @@
 #' @return A contatenated vector of `train` and `test` transformed and converted regarding the \code{output_type}.
 #' 
 #' ### preparation
-#' prepare_factors(train$some_new, test$some_new, output_type = "factor") 
+#' prepare_factors_tidy(train$some_new, test$some_new, output_type = "factor") 
 #' 
 #'
 #' @export
