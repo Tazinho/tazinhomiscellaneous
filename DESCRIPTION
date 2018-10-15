@@ -9,6 +9,8 @@ Maintainer: Malte Grosser <malte.grosser@gmail.com>
 Depends:
     R (>= 3.1)
 Imports:
+    magrittr,
+    dplyr
 Suggests:
     testthat,
     covr,

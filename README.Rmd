@@ -51,3 +51,5 @@ train_test %>%
             ~ prepare_factors(.x[i_train], .x[-i_train], output_type = "integer")) %>% 
   print(n = nrow(.))
 ```
+
+`prepare_factors()` is internally written in base R. The package also included `prepare_factors_tidy()` which is written mostly via **tidyverse** code. The speed difference between both may vary depending on the supplied data.

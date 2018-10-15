@@ -92,3 +92,8 @@ train_test %>%
 ## 14         2         1        2        4       4 FALSE  
 ## 15        NA         1        1        4       5 TRUE
 ```
+
+`prepare_factors()` is internally written in base R. The package also
+included `prepare_factors_tidy()` which is written mostly via
+**tidyverse** code. The speed difference between both may vary depending
+on the supplied data.
