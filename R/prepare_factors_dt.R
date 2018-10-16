@@ -46,24 +46,25 @@ prepare_factors_dt <- function(train, test = NULL,
   if (rare_level %in% train_u)  warning("`rare_level` is already a level in `train`.")
   if (rare_level %in% test_u)  warning("`rare_level` is already a level in `test`.")
   # Count levels in the training data and change levels accordingly (while keeping NAs)
-  df_train <- data.table::data.table(train = train)
-  df_train <- df_train[ , `:=`(count_train = .N), by = train] %>% unique()
-  df_train <- data.table::as.data.table(df_train)
+  dt_train <- data.table::data.table(train = train)
+  dt_train <- dt_train[ , `:=`(count_train = .N), by = train] %>% unique()
 
-  df_train_test <- dplyr::tibble(train_test = train_test) %>% 
-    dplyr::left_join(df_train, by = c("train_test" = "train")) %>% 
-    dplyr::mutate(count_train = dplyr::if_else(is.na(count_train), 0L, count_train)) %>% 
-    dplyr::mutate(output = dplyr::case_when(
-      is.na(train_test)         ~ train_test,
-      count_train == 0L         ~ new_level,
-      count_train  < rare_count ~ rare_level,
-      TRUE                      ~ train_test
-    ))
+  dt_train_test <- data.table::data.table(train_test = train_test)
+  
+  dt_train_test <- dt_train[dt_train_test, on = c(train = "train_test")]
+  
+  train_test_n <- dt_train_test$count_train
+  train_test <- dt_train_test$train
+  
+  train_test_n[is.na(train_test_n)] <- 0L
+  train_test[!is.na(train_test) & train_test_n < rare_count] <- rare_level
+  train_test[!is.na(train_test) & train_test_n == 0L] <- new_level
+  
   # convert output
-  output <- df_train_test[["output"]]
+  output <- train_test
   if (output_type != "character") {
-    output_level <- df_train %>% dplyr::filter(count_train >= rare_count) %>%
-      dplyr::pull(train) %>% c(rare_level, new_level)
+    output_level <- dt_train[count_train >= rare_count] %>%
+      `$`(train) %>% c(rare_level, new_level)
     output <- factor(output, ordered = TRUE, levels = output_level)
   }
   
