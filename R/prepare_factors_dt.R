@@ -37,10 +37,9 @@ prepare_factors_dt <- function(train, test = NULL,
   if (!is.null(encoding)) stop("`encoding` is not implemented at the moment.")
   if (!is.logical(return_mapping)) stop("`return_mapping` must be a logical.")
   # Here should be a warning when `new_level` or `rare_level` already occur in the data
-  train_test <- c(train, test)
   train_u <- unique(train)
   test_u  <- unique(test)
-  train_test_u <- unique(train, test)
+  train_test_u <- unique(c(train_u, test_u))
   if (new_level %in% train_u)  warning("`new_level` is already a level in `train`.")
   if (new_level %in% test_u)  warning("`new_level` is already a level in `test`.")
   if (rare_level %in% train_u)  warning("`rare_level` is already a level in `train`.")
@@ -48,8 +47,8 @@ prepare_factors_dt <- function(train, test = NULL,
   # Count levels in the training data and change levels accordingly (while keeping NAs)
   dt_train <- data.table::data.table(train = train)
   dt_train <- unique(dt_train[ , `:=`(count_train = .N), by = train])
-
-  dt_train_test <- data.table::data.table(train_test = train_test)
+  
+  dt_train_test <- data.table::data.table(train_test = c(train, test))
   
   dt_train_test <- dt_train[dt_train_test, on = c(train = "train_test")]
   
