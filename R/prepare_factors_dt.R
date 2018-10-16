@@ -47,7 +47,7 @@ prepare_factors_dt <- function(train, test = NULL,
   if (rare_level %in% test_u)  warning("`rare_level` is already a level in `test`.")
   # Count levels in the training data and change levels accordingly (while keeping NAs)
   dt_train <- data.table::data.table(train = train)
-  dt_train <- dt_train[ , `:=`(count_train = .N), by = train] %>% unique()
+  dt_train <- unique(dt_train[ , `:=`(count_train = .N), by = train])
 
   dt_train_test <- data.table::data.table(train_test = train_test)
   
@@ -61,18 +61,17 @@ prepare_factors_dt <- function(train, test = NULL,
   train_test[!is.na(train_test) & train_test_n == 0L] <- new_level
   
   # convert output
-  output <- train_test
+  train_test
   if (output_type != "character") {
-    output_level <- dt_train[count_train >= rare_count] %>%
-      `$`(train) %>% c(rare_level, new_level)
-    output <- factor(output, ordered = TRUE, levels = output_level)
+    output_level <- c(dt_train[count_train >= rare_count]$train, rare_level, new_level)
+    train_test <- factor(train_test, ordered = TRUE, levels = output_level)
   }
   
   if (output_type == "integer") {
-    output <- as.integer(output) 
+    train_test <- as.integer(train_test) 
   }
   # - possibly add `mapping` attribute
   # return
-  output
+  train_test
 }
 
